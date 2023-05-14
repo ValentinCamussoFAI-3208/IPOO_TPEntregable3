@@ -1,14 +1,16 @@
 <?php
-    // Se incluye los archivos que contienen las clases 'Viaje' y 'Pasajero'
+    // Se incluyen los archivos con las clases
     include 'Viaje.php';
     include 'Pasajero.php';
     include 'ResponsableV.php';
+    include 'PasajeroVIP.php';
+    include 'PasajeroEspecial.php';
     // Se crea el objeto pasajero
-    $pasajero = new Pasajero("", "", 0, 0);
+    $pasajero = new Pasajero("", "", 0, 0, 0, 0);
     // Se crea el objeto responsable
     $responsable = new ResponsableV(0, 0, "", "");
     // Se crea el objeto viaje
-    $viaje = new Viaje( 0, "", 0, [], 0, "");
+    $viaje = new Viaje( 0, "", 0, [], 0, "", 0, 0);
     // Se asigna true a $sigue asi el while se ejecuta 
     $sigue = true;
     // Mientras la variable $sigue sea verdadera se ejecuta el while
@@ -36,8 +38,10 @@
                 $destino = trim(fgets(STDIN));
                 echo "Ingrese la cantidad máxima de pasajeros del viaje: ";
                 $maxPasajeros = trim(fgets(STDIN));
+                echo "Ingrese el costo del viaje: ";
+                $costoViaje = trim(fgets(STDIN));
                 // Se cargan los datos del viaje
-                $viaje = new Viaje($codigo, $destino, $maxPasajeros, [], 0, "");
+                $viaje = new Viaje($codigo, $destino, $maxPasajeros, [], 0, "", $costoViaje, 0);
                 echo "Viaje cargado correctamente.\n";
                 break;
             case 2:
@@ -48,10 +52,13 @@
                 $destino = trim(fgets(STDIN));
                 echo "Ingrese la nueva cantidad máxima de pasajeros del viaje: ";
                 $maxPasajeros = trim(fgets(STDIN));
+                echo "Ingrese el nuevo costo del viaje: ";
+                $costoViaje = trim(fgets(STDIN));
                 // Se modifican los datos del viaje
                 $viaje->setCodigo($codigo);
                 $viaje->setDestino($destino);
                 $viaje->setMaxPasajeros($maxPasajeros);
+                $viaje->setCosto($costoViaje);
                 echo "Viaje modificado correctamente.\n";
                 break;
             case 3:
@@ -71,7 +78,7 @@
                 break;
             case 4:
                 // Verifica que no se pase la capacidad máxima del viaje
-                if ($viaje->getCantidadPasajeros() < $viaje->getMaxPasajeros()) {
+                if ($viaje->hayPasajesDisponible()) {
                     // Se piden los datos al usuario
                     echo "Ingrese el nombre del pasajero: ";
                     $nombreP = trim(fgets(STDIN));
@@ -81,9 +88,30 @@
                     $documentoP = trim(fgets(STDIN));
                     echo "Ingrese el número de teléfono del pasajero: ";
                     $telefonoP = trim(fgets(STDIN));
-                    // Se crea el objeto pasajero para enviarlo a agregarPasajero
-                    $pasajero = new Pasajero ($nombreP, $apellidoP, $documentoP, $telefonoP);
-                    // Verifica si el pasajero ya existe y esta guardado en el arreglo de pasajeros
+                    echo "Ingrese el número de asiento de su viaje: ";
+                    $nAsientoP = trim(fgets(STDIN));
+                    echo "Ingrese el número de ticket de su viaje: ";
+                    $nTicketP = trim(fgets(STDIN));
+                    echo "¿El pasajero es VIP?(Si/No): ";
+                    $es = trim(fgets(STDIN));
+                    if ($es == "Si") { // Si es vip
+                        echo "Ingrese el número del pasajero frecuente: ";
+                        $nPasajeroFrecuente = trim(fgets(STDIN));
+                        echo "Ingrese las millas del pasajero: ";
+                        $millasP = trim(fgets(STDIN));
+                        $pasajero = new PasajeroVIP ($nombreP, $apellidoP, $documentoP, $telefonoP, $nAsientoP, $nTicketP, $nPasajeroFrecuente, $millasP);
+                    } else { // Si no es vip
+                        echo "¿El pasajero necesita servicios especiales?(Si/No): ";
+                        $requiere = trim(fgets(STDIN));
+                        if ($requiere == "Si") { // Si es pasajero especial
+                            echo "¿Cuántos servicios necesita el pasajero?: ";
+                            $cantServicios = trim(fgets(STDIN));
+                            $pasajero = new PasajeroEspecial ($nombreP, $apellidoP, $documentoP, $telefonoP, $nAsientoP, $nTicketP, $cantServicios);
+                        } else { // Si no es pasajero especial
+                            $pasajero = new Pasajero ($nombreP, $apellidoP, $documentoP, $telefonoP, $nAsientoP, $nTicketP);
+                        }
+                    }
+                    // Verifica si el pasajero ya existe y en caso de que no, lo agrega al viaje.
                     if ($viaje->agregarPasajero($pasajero)) {
                         echo "Ya existe un pasajero con el documento N°" . $documentoP . "\n";
                     } else {
@@ -109,7 +137,7 @@
                 echo "Ingrese el número de documento del pasajero que desea cambiar: ";
                 $documentoP = trim(fgets(STDIN));
                 // Modifica los datos del pasajero en caso de encontrarlo
-                if ($viaje->modificarPasajero("", "", $documentoP , 0) == false) {
+                if ($viaje->modificarPasajero("", "", $documentoP , 0, 0, 0) == false) {
                     echo "No hay ningún pasajero con el documento N°" . $documentoP . "\n";
                 } else {
                     echo "Ingrese el nuevo nombre del pasajero: ";
@@ -118,7 +146,11 @@
                     $apellidoP = trim(fgets(STDIN));
                     echo "Ingrese el nuevo teléfono del pasajero: ";
                     $telefonoP = trim(fgets(STDIN));
-                    $viaje->modificarPasajero($nombreP, $apellidoP, $documentoP, $telefonoP);
+                    echo "Ingrese el número de asiento de su viaje: ";
+                    $nAsientoP = trim(fgets(STDIN));
+                    echo "Ingrese el número de ticket de su viaje: ";
+                    $nTicketP = trim(fgets(STDIN));
+                    $viaje->modificarPasajero($nombreP, $apellidoP, $documentoP, $telefonoP, $nAsientoP, $nTicketP);
                     echo "Pasajero modificado correctamente.\n";
                 }
                 break;
