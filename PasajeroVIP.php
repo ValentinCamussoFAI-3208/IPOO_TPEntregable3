@@ -25,6 +25,13 @@ class PasajeroVIP extends Pasajero {
     public function getMillas() {
         return $this->millas;
     }
+    // Método toString
+    public function __toString() {
+        $salida = parent::__toString();
+        $salida .= "Número de viajero frecuente: " . $this->getNViajeroFrecuente() . "\n";
+        $salida .= "Cantidad de millas acumuladas: " . $this->getMillas() . "\n";
+        return $salida;
+    }
     /** Retorna el porcentaje que debe aplicarse como incremento según las características del pasajero
      * @return INT */
     public function darPorcentajeIncremento() {

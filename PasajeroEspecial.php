@@ -17,6 +17,12 @@ class PasajeroEspecial extends Pasajero {
     public function getCantServicios() {
         return $this->cantServicios;
     }
+    // Método toString
+    public function __toString() {
+        $salida = parent::__toString();
+        $salida .= "Cantidad de servicios que necesita: " . $this->getCantServicios() . "\n";
+        return $salida;
+    }
     /** Retorna el porcentaje que debe aplicarse como incremento según las características del pasajero
      * @return INT */
     public function darPorcentajeIncremento() {
