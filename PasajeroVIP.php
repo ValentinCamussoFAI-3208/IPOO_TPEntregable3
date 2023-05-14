@@ -6,8 +6,8 @@ class PasajeroVIP extends Pasajero {
     private $nViajeroFrecuente;
     private $millas;
     // Método constructor
-    public function __construct($nombre, $apellido, $nDocumento, $telefono, $nViajeroFrecuente, $millas) {
-        parent::__construct($nombre, $apellido, $nDocumento, $telefono);
+    public function __construct($nombre, $apellido, $nDocumento, $telefono,$nAsiento, $nTicketPasaje, $nViajeroFrecuente, $millas) {
+        parent::__construct($nombre, $apellido, $nDocumento, $telefono, $nAsiento, $nTicketPasaje);
         $this->nViajeroFrecuente = $nViajeroFrecuente;
         $this->millas = $millas;
     }

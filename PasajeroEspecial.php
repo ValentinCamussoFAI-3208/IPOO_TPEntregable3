@@ -5,8 +5,8 @@ class PasajeroEspecial extends Pasajero {
     // Atributos
     private $cantServicios;
     // Método constructor
-    public function __construct($nombre, $apellido, $nDocumento, $telefono, $cantServicios) {
-        parent::__construct($nombre, $apellido, $nDocumento, $telefono);
+    public function __construct($nombre, $apellido, $nDocumento, $telefono, $nAsiento, $nTicketPasaje, $cantServicios) {
+        parent::__construct($nombre, $apellido, $nDocumento, $nAsiento, $nTicketPasaje, $telefono);
         $this->cantServicios = $cantServicios;
     }
     // Métodos set
